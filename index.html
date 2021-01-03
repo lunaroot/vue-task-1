@@ -3,28 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Основы Vue</title>
+    <title>Stepper</title>
     <link rel="stylesheet" href="theme.css" />
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    </style>
   </head>
   <body>
-
-  <div class="container" id="app">
+  <div class="container" id="app" v-cloak>
     <div class="card">
       <h1>План по изучению Vue.js</h1>
 
       <div class="steps">
         <div class="steps-content">
-          Сюда необходимо вывести текст активного шага по его индексу
+          {{ currentStep.text }}
         </div>
         <ul class="steps-list">
-          <li class="steps-item done"><span>1</span> Шаг 1</li>
+          <!-- <li class="steps-item done"><span>1</span> Шаг 1</li>
           <li class="steps-item done"><span>2</span> Шаг 2</li>
           <li class="steps-item active"><span>3</span> Шаг 3</li>
-          <li class="steps-item"><span>4</span> Шаг 4</li>
+          <li class="steps-item"><span>4</span> Шаг 4</li> -->
+          <li
+            class="steps-item"
+            :class="{
+              active: idx === activeIndex,
+              done: idx < activeIndex
+            }"
+            v-for="(step, idx) in steps"
+            :key="step.title"
+            @click="setActiveStep(idx)"
+          >
+            <span>{{ idx + 1 }}</span> {{ step.title }}
+          </li>
         </ul>
         <div>
-          <button class="btn">Назад</button>
-          <button class="btn primary">Вперед</button>
+          <button class="btn" @click="prevStep" :disabled="isDisabledPrevStep" v-if="!isFinish">Назад</button>
+          <button class="btn primary" @click="nextStep" v-if="!isLastStep">Вперед</button>
+          <button class="btn" @click="reset" v-else-if="isLastStep && isFinish">Начать заново</button>
+          <button class="btn primary" @click="finish" v-else>Закончить</button>
         </div>
       </div>
     </div>

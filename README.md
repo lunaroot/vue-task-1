@@ -1,3 +1,3 @@
 ## vue-task-1
 
-VUE task 1
+Stepper
